@@ -55,6 +55,7 @@ require 'quickbooks/model/journal_entry_line_detail'
 require 'quickbooks/model/line_ex'
 require 'quickbooks/model/line'
 require 'quickbooks/model/journal_entry'
+require 'quickbooks/model/journal_code'
 require 'quickbooks/model/item_group_line'
 require 'quickbooks/model/item_group_detail'
 require 'quickbooks/model/item'
@@ -178,6 +179,7 @@ require 'quickbooks/service/payment_change'
 require 'quickbooks/service/transfer'
 require 'quickbooks/service/change_data_capture'
 require 'quickbooks/service/refund_receipt_change'
+require 'quickbooks/service/journal_code'
 
 module Quickbooks
   @@sandbox_mode = false

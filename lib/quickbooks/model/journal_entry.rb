@@ -6,6 +6,7 @@ module Quickbooks
       XML_COLLECTION_NODE = "JournalEntry"
       XML_NODE = "JournalEntry"
       REST_RESOURCE = 'journalentry'
+      MINORVERSION = 5
 
       xml_accessor :id, :from => 'Id'
       xml_accessor :sync_token, :from => 'SyncToken', :as => Integer
