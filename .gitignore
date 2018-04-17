@@ -9,5 +9,5 @@ Gemfile.lock
 .bundle
 .idea
 .env
-
-\.yardoc/
+webapp/.env
+.yardoc/
