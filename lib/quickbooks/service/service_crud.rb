@@ -60,7 +60,10 @@ module Quickbooks
       end
 
       def delete_by_query_string(entity, options = {})
-        url = "#{url_for_resource(model::REST_RESOURCE)}?operation=delete"
+        resource_url = url_for_resource(model::REST_RESOURCE)
+        separator = if resource_url.include?("?") then "&" else "?" end
+        url = "#{resource_url}#{separator}operation=delete"
+
 
         xml = entity.to_xml_ns(options)
         response = do_http_post(url, valid_xml_document(xml))
