@@ -38,7 +38,7 @@ module Quickbooks
       end
 
       def oauth_v1?
-        @oauth.is_a? OAuth::AccessToken
+        false # @oauth.is_a? OAuth::AccessToken
       end
 
       def oauth_v2?
