@@ -12,7 +12,8 @@ module Quickbooks
         uploadIO = class_for_io.new(path_to_file, mime_type)
         response = do_http_file_upload(uploadIO, url, attachable)
         prefix = "AttachableResponse/xmlns:Attachable"
-        if response.code.to_i == 200
+        if response.code.to_i == 200 && response.plain_body.present?
+          Rails.logger.info "Quickbooks upload response code 200: #{response.plain_body}"
           model.from_xml(parse_singular_entity_response(model, response.plain_body, prefix))
         else
           nil
