@@ -1,7 +1,5 @@
 module OauthHelpers
   def construct_oauth
-    #FakeWeb.allow_net_connect = false
-
     if ENV['OAUTH'] == '1'
       oauth1_token
     else
@@ -10,8 +8,6 @@ module OauthHelpers
   end
 
   def oauth1_token
-    return nil
-
     oauth_consumer = OAuth::Consumer.new("app_key", "app_secret", {
         :site               => "https://oauth.intuit.com",
         :request_token_path => "/oauth/v1/get_request_token",

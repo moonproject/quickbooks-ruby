@@ -2,9 +2,9 @@ describe Quickbooks::Service::BaseService do
 
   it ".is_json" do
     construct_service :invoice
-    expect(@service.is_json?).to be_false
+    expect(@service.is_json?).to be false
     construct_service :tax_service
-    expect(@service.is_json?).to be_true
+    expect(@service.is_json?).to be true
   end
 
   describe "#url_for_query" do
@@ -14,7 +14,7 @@ describe Quickbooks::Service::BaseService do
       it "correctly encodes the query" do
         subject.realm_id = 1234
         query = "SELECT * FROM Customer where Name = 'John'"
-        subject.url_for_query(query).should include(correct_url)
+        expect(subject.url_for_query(query)).to include(correct_url)
       end
     end
 
@@ -42,8 +42,8 @@ describe Quickbooks::Service::BaseService do
     end
 
     it "correctly initializes with an access_token and realm" do
-      @service.company_id.should == "9991111222"
-      @service.oauth.should_not be_nil
+      expect(@service.company_id).to eq("9991111222")
+      expect(@service.oauth).not_to be_nil
     end
   end
 
@@ -55,7 +55,7 @@ describe Quickbooks::Service::BaseService do
     it "should throw request exception with no options" do
       xml = fixture('generic_error.xml')
       response = Struct.new(:code, :plain_body).new(400, xml)
-      expect { @service.send(:check_response, response) }.to raise_error
+      expect { @service.send(:check_response, response) }.to raise_error(Quickbooks::IntuitRequestException)
     end
 
     it "should add request xml to request exception" do
@@ -65,7 +65,7 @@ describe Quickbooks::Service::BaseService do
       begin
         @service.send(:check_response, response, :request => xml2)
       rescue Quickbooks::IntuitRequestException => ex
-        ex.request_xml.should == xml2
+        expect(ex.request_xml).to eq(xml2)
       end
     end
 
@@ -139,8 +139,11 @@ describe Quickbooks::Service::BaseService do
       expect { @service.send(:check_response, response) }.to raise_error(Quickbooks::TooManyRequests, message)
     end
 
-    it "should raise ServiceUnavailable on HTTP 503 and 504" do
+    it "should raise ServiceUnavailable on HTTP 502, 503 and 504" do
       xml = fixture('generic_error.xml')
+
+      response = Struct.new(:code, :plain_body).new(502, xml)
+      expect { @service.send(:check_response, response) }.to raise_error(Quickbooks::ServiceUnavailable)
 
       response = Struct.new(:code, :plain_body).new(503, xml)
       expect { @service.send(:check_response, response) }.to raise_error(Quickbooks::ServiceUnavailable)
@@ -166,16 +169,16 @@ describe Quickbooks::Service::BaseService do
     end
 
     it "should not log by default" do
-      Quickbooks.logger.should_receive(:info).never
+      expect(Quickbooks.logger).not_to receive(:info)
       @service.query
     end
 
     it "should log if Quickbooks.log = true" do
       Quickbooks.log = true
       obj = double('obj', :to_xml => '<test/>')
-      Nokogiri::XML::Document.any_instance.stub(:to_xml) { |arg| obj.to_xml }
-      obj.should_receive(:to_xml).once # will only called once on a get request, twice on a post
-      Quickbooks.logger.should_receive(:info).at_least(1)
+      expect_any_instance_of(Nokogiri::XML::Document).to receive(:to_xml) { |arg| obj.to_xml }
+      expect(obj).to receive(:to_xml).once # will only called once on a get request, twice on a post
+      expect(Quickbooks.logger).to receive(:info).at_least(1)
       @service.query
       Quickbooks.log = false
     end
@@ -183,8 +186,8 @@ describe Quickbooks::Service::BaseService do
     it "should log if Quickbooks.log = true but not prettyprint the xml" do
       Quickbooks.log = true
       Quickbooks.log_xml_pretty_print = false
-      Nokogiri::XML::Document.any_instance.should_not_receive(:to_xml)
-      Quickbooks.logger.should_receive(:info).at_least(1)
+      expect_any_instance_of(Nokogiri::XML::Document).not_to receive(:to_xml)
+      expect(Quickbooks.logger).to receive(:info).at_least(1)
       @service.query
       Quickbooks.log = false
       Quickbooks.log_xml_pretty_print = true

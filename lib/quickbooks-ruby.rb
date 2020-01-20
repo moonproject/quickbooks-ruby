@@ -18,7 +18,6 @@ require 'quickbooks/faraday/middleware/gzip'
 #== OAuth Responses
 require 'quickbooks/service/responses/oauth_http_response'
 require 'quickbooks/service/responses/methods'
-require 'quickbooks/service/responses/oauth1_http_response'
 require 'quickbooks/service/responses/oauth2_http_response'
 
 #== Models
@@ -56,7 +55,6 @@ require 'quickbooks/model/journal_entry_line_detail'
 require 'quickbooks/model/line_ex'
 require 'quickbooks/model/line'
 require 'quickbooks/model/journal_entry'
-require 'quickbooks/model/journal_code'
 require 'quickbooks/model/item_group_line'
 require 'quickbooks/model/item_group_detail'
 require 'quickbooks/model/item'
@@ -76,6 +74,7 @@ require 'quickbooks/model/physical_address'
 require 'quickbooks/model/invoice_line_item'
 require 'quickbooks/model/invoice_group_line_detail'
 require 'quickbooks/model/company_info'
+require 'quickbooks/model/company_currency'
 require 'quickbooks/model/customer'
 require 'quickbooks/model/delivery_info'
 require 'quickbooks/model/sales_receipt'
@@ -137,6 +136,7 @@ require 'quickbooks/service/access_token'
 require 'quickbooks/service/class'
 require 'quickbooks/service/attachable'
 require 'quickbooks/service/company_info'
+require 'quickbooks/service/company_currency'
 require 'quickbooks/service/customer'
 require 'quickbooks/service/department'
 require 'quickbooks/service/invoice'
@@ -181,7 +181,6 @@ require 'quickbooks/service/payment_change'
 require 'quickbooks/service/transfer'
 require 'quickbooks/service/change_data_capture'
 require 'quickbooks/service/refund_receipt_change'
-require 'quickbooks/service/journal_code'
 
 # Register Faraday Middleware
 Faraday::Middleware.register_middleware :gzip => lambda { Gzip }
@@ -228,28 +227,32 @@ module Quickbooks
     end
   end # << self
 
-  class InvalidModelException < StandardError; end
-  class AuthorizationFailure < StandardError; end
-  class Forbidden < StandardError; end
-  class NotFound < StandardError; end
-  class RequestTooLarge < StandardError; end
-  class ThrottleExceeded < Forbidden; end
-  class TooManyRequests < StandardError; end
-  class ServiceUnavailable < StandardError; end
-  class MissingRealmError < StandardError; end
+  class Error < StandardError; end
+  class InvalidModelException < Error; end
+  class AuthorizationFailure < Error
+    attr_accessor :code, :detail, :type
 
-  class IntuitRequestException < StandardError
-    attr_accessor :message, :code, :detail, :type, :request_xml, :request_json
+    def initialize(error_hash = {})
+      @code = error_hash[:code]
+      @detail = error_hash[:detail]
+      @type = error_hash[:type]
+      super(error_hash[:message])
+    end
+  end
+  class Forbidden < Error; end
+  class NotFound < Error; end
+  class RequestTooLarge < Error; end
+  class ThrottleExceeded < Forbidden; end
+  class TooManyRequests < Error; end
+  class ServiceUnavailable < Error; end
+  class MissingRealmError < Error; end
+
+  class IntuitRequestException < Error
+    attr_accessor :message, :code, :detail, :type, :intuit_tid, :request_xml, :request_json
 
     def initialize(msg)
       self.message = msg
       super(msg)
-    end
-  end
-
-  class InvalidOauthAccessTokenObject < StandardError
-    def initialize(access_token)
-      super("Expected access token to be an instance of OAuth::AccessToken or OAuth2::AccessToken, got #{access_token.class}.")
     end
   end
 

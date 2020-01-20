@@ -16,6 +16,16 @@ module Quickbooks
         line
       end
 
+      let(:second_line) do
+        line = Model::Line.new
+        line.group_line! do |group_line|
+          group_line.quantity = 15
+          group_line.line_items = [ Model::Line.new ]
+        end
+
+        line
+      end
+
       before do
         subject.company_id = "9991111222"
         subject.access_token = construct_oauth
@@ -51,12 +61,12 @@ module Quickbooks
         shipping_reference = Quickbooks::Model::BaseReference.new('FedEx', name: 'FedEx')
         receipt.ship_method_ref = shipping_reference
         receipt.txn_date = Time.now
-        receipt.line_items = [line]
+        receipt.line_items = [line, second_line]
 
         receipt = subject.create(receipt)
         expect(receipt.line_items.first.description).to eq line.description
 
-        receipt.ship_method_ref.name.should == 'FedEx'
+        expect(receipt.ship_method_ref.name).to eq('FedEx')
       end
 
       it "fetches sales receipt by ID" do
@@ -90,7 +100,7 @@ module Quickbooks
         stub_http_request(:post, "#{subject.url_for_resource(model::REST_RESOURCE)}?include=void", ["200", "OK"], xml)
 
         response = subject.void(receipt)
-        response.private_note.should == 'Voided'
+        expect(response.private_note).to eq('Voided')
       end
 
       it "can send a sales receipt using bill_email" do
@@ -103,9 +113,9 @@ module Quickbooks
         sales_receipt.sync_token = 2
         sales_receipt.id = 1
         sent_sales_receipt = subject.send(sales_receipt)
-        sent_sales_receipt.email_status.should == "EmailSent"
-        sent_sales_receipt.delivery_info.delivery_type.should == "Email"
-        sent_sales_receipt.delivery_info.delivery_time.should eq(Time.new(2015, 2, 24, 18, 26, 03, "-08:00"))
+        expect(sent_sales_receipt.email_status).to eq("EmailSent")
+        expect(sent_sales_receipt.delivery_info.delivery_type).to eq("Email")
+        expect(sent_sales_receipt.delivery_info.delivery_time).to eq(Time.new(2015, 2, 24, 18, 26, 03, "-08:00"))
       end
 
       it "can send an sales receipt with new email_address" do
@@ -118,7 +128,7 @@ module Quickbooks
         sales_receipt.sync_token = 2
         sales_receipt.id = 1
         sent_sales_receipt = subject.send(sales_receipt, "test@intuit.com")
-        sent_sales_receipt.bill_email.address.should == "test@intuit.com"
+        expect(sent_sales_receipt.bill_email.address).to eq("test@intuit.com")
       end
 
     end
