@@ -18,6 +18,7 @@ describe Quickbooks::Service::Account do
     xml = fixture("fetch_account_by_id.xml")
     model = Quickbooks::Model::Account
     stub_http_request(:get, "#{@service.url_for_resource(model::REST_RESOURCE)}/1", ["200", "OK"], xml)
+
     account = @service.fetch_by_id(1)
 
     expect(account.name).to eq("Sales of Product Income")
