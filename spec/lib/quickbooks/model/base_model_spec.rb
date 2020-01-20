@@ -33,21 +33,21 @@ describe 'Quickbooks::Model::BaseModel' do
       end
     end
 
-    context 'For a transaction entity' do
-      # before do
-      #   expect(Quickbooks::Model::Definition::ClassMethods::TRANSACTION_ENTITIES).to receive(:include?).and_return(true)
-      # end
+    # context 'For a transaction entity' do
+    #   before do
+    #     expect(Quickbooks::Model::Definition::ClassMethods::TRANSACTION_ENTITIES).to receive(:include?).and_return(true)
+    #   end
 
-      # describe '#is_transaction_entity?' do
-      #   subject { super().is_transaction_entity? }
-      #   it { is_expected.to be true }
-      # end
+    #   describe '#is_transaction_entity?' do
+    #     subject { super().is_transaction_entity? }
+    #     it { is_expected.to be true }
+    #   end
 
-      # describe '#is_name_list_entity?' do
-      #   subject { super().is_name_list_entity? }
-      #   it { is_expected.to be false }
-      # end
-    end
+    #   describe '#is_name_list_entity?' do
+    #     subject { super().is_name_list_entity? }
+    #     it { is_expected.to be false }
+    #   end
+    # end
   end
 
   describe '.new' do
