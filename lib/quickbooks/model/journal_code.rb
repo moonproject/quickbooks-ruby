@@ -13,7 +13,6 @@ module Quickbooks
       xml_accessor :name, :from => "Name"
       xml_accessor :Type, :from => "Active"
       xml_accessor :description, :from => "Description"
-
     end
   end
 end
