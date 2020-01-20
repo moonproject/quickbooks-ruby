@@ -1,0 +1,56 @@
+require: rubocop-performance
+AllCops:
+  Exclude: # Use folder/path/**/* to exclude a folder and its content
+    - 'README.md'
+    - 'bin/**/*'
+    - 'db/migrate/**/*'
+    - 'db/seeds/**/*'
+    - 'db/maxmind/**/*'
+    - '**/*.slim'
+    - 'db/schema.rb'
+    - 'vendor/**/*'
+    - 'lib/tasks/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'spec/fixtures/**/*'
+    - 'spec/schemas/**/*'
+    - 'config/initializers/content_security_policy.rb'
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  TargetRubyVersion: 2.6.5
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+Layout/HashAlignment:
+  EnforcedColonStyle: table
+Layout/LineLength:
+  Max: 126 # Github fixed web line length
+Metrics/ClassLength:
+  Max: 500
+Metrics/ModuleLength:
+  Max: 250
+Metrics/AbcSize:
+  Max: 50
+Metrics/CyclomaticComplexity:
+  Max: 25
+Metrics/MethodLength:
+  Max: 25
+Metrics/PerceivedComplexity:
+  Max: 12
+Naming/RescuedExceptionsVariableName:
+  Enabled: false # Rubocop contradicts himself
+Style/AsciiComments:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false # Default in ruby 3, so don't need to worry about, except we go some memory leaks
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+Style/PercentLiteralDelimiters:
+  Enabled: false # Cause of a bug in codeclimate
+Style/RegexpLiteral:
+  Enabled: false

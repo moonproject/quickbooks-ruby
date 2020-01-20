@@ -10,12 +10,12 @@ module Quickbooks
       end
 
       def log_xml(str)
-        if ::Quickbooks.log_xml_pretty_print? && !(str and str.empty?)
+        if ::Quickbooks.log_xml_pretty_print? && !(str && str.empty?)
           Nokogiri::XML(str).to_xml
         else
           str
         end
-      rescue => e
+      rescue StandardError => e
         e
       end
     end

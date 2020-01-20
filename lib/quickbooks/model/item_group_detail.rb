@@ -3,7 +3,7 @@ module Quickbooks
     class ItemGroupDetail < BaseModel
       include HasLineItems
 
-      xml_accessor :line_items, :from => 'ItemGroupLine', :as => [ItemGroupLine]
+      xml_accessor :line_items, from: 'ItemGroupLine', as: [ItemGroupLine]
     end
   end
 end

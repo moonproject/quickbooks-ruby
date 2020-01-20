@@ -28,7 +28,6 @@ require 'stringio'
 class Net::HTTPResponse
   # Return the uncompressed content
   def plain_body
-
     encoding = self['Content-Encoding']
     @_content ||= nil
 
@@ -36,17 +35,17 @@ class Net::HTTPResponse
 
     if encoding
       case encoding
-        when 'gzip'
-          i = Zlib::GzipReader.new(StringIO.new(self.body))
-          @_content = i.read
-        when 'deflate'
-          i = Zlib::Inflate.new
-          @_content = i.inflate(self.body)
-        else
-          raise "Unknown encoding - #{encoding}"
+      when 'gzip'
+        i = Zlib::GzipReader.new(StringIO.new(body))
+        @_content = i.read
+      when 'deflate'
+        i = Zlib::Inflate.new
+        @_content = i.inflate(body)
+      else
+        raise "Unknown encoding - #{encoding}"
       end
     else
-      @_content = self.body
+      @_content = body
     end
 
     @_content

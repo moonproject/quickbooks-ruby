@@ -3,11 +3,11 @@ require 'time'
 module Quickbooks
   module Model
     class MetaData < BaseModel
-      xml_accessor :create_time, :from => 'CreateTime', :as => Time
-      xml_accessor :last_updated_time, :from => 'LastUpdatedTime', :as => Time
+      xml_accessor :create_time, from: 'CreateTime', as: Time
+      xml_accessor :last_updated_time, from: 'LastUpdatedTime', as: Time
 
-      def to_xml(options = {})
-        xml = %Q{<MetaData>}
+      def to_xml(_options = {})
+        xml = %{<MetaData>}
         xml = "#{xml}<CreateTime>#{formatted_date(create_time)}</CreateTime>"
         xml = "#{xml}<LastUpdatedTime>#{formatted_date(last_updated_time)}</LastUpdatedTime></MetaData>"
         xml
@@ -15,10 +15,9 @@ module Quickbooks
 
       private
 
-      def formatted_date(datetime)
-        datetime.strftime('%Y-%m-%dT%H:%M:%S%z')
-      end
-
+        def formatted_date(datetime)
+          datetime.strftime('%Y-%m-%dT%H:%M:%S%z')
+        end
     end
   end
 end

@@ -1,10 +1,9 @@
 module Quickbooks
   module Service
     class Item < BaseService
-
       def delete(item)
         item.active = false
-        update(item, :sparse => true)
+        update(item, sparse: true)
       end
 
       def url_for_resource(resource)
@@ -24,9 +23,9 @@ module Quickbooks
 
       private
 
-      def model
-        Quickbooks::Model::Item
-      end
+        def model
+          Quickbooks::Model::Item
+        end
     end
   end
 end

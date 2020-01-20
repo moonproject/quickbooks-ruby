@@ -1,23 +1,24 @@
 module Quickbooks
   module Service
     class Department < BaseService
-
       def update(entity, options = {})
-        raise Quickbooks::InvalidModelException.new('Department sparse update is not supported by Intuit at this time') if options[:sparse] && options[:sparse] == true
+        if options[:sparse] && options[:sparse] == true
+          raise Quickbooks::InvalidModelException, 'Department sparse update is not supported by Intuit at this time'
+        end
+
         super(entity, options)
       end
 
       def delete(department)
         department.active = false
-        update(department, :sparse => false)
+        update(department, sparse: false)
       end
 
       private
 
-      def model
-        Quickbooks::Model::Department
-      end
-
+        def model
+          Quickbooks::Model::Department
+        end
     end
   end
 end

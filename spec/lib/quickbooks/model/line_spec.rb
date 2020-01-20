@@ -1,5 +1,5 @@
 describe Quickbooks::Model::Line do
-  context "#linked_transactions" do
+  context '#linked_transactions' do
     shared_examples_for 'assign single linked transaction id' do
       let(:id)     { 1 }
       let(:new_id) { 2 }
@@ -47,21 +47,21 @@ describe Quickbooks::Model::Line do
       end
     end
 
-    context "Invoice" do
+    context 'Invoice' do
       let(:type) { 'Invoice' }
 
       include_examples 'assign single linked transaction id'
       include_examples 'assign multiple linked transaction ids'
     end
 
-    context "Credit Memo" do
+    context 'Credit Memo' do
       let(:type) { 'CreditMemo' }
 
       include_examples 'assign single linked transaction id'
       include_examples 'assign multiple linked transaction ids'
     end
 
-    context "Invoice and Credit Memo" do
+    context 'Invoice and Credit Memo' do
       let(:invoice_ids)     { [1, 2] }
       let(:credit_memo_ids) { [3, 4] }
 
@@ -86,6 +86,5 @@ describe Quickbooks::Model::Line do
         expect(subject.linked_transactions.count { |lt| lt.txn_type == 'Invoice' }).to eq(2)
       end
     end
-
   end
 end

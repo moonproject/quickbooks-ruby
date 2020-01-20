@@ -16,32 +16,32 @@ module Quickbooks
       include HasLineItems
 
       #== Constants
-      REST_RESOURCE = 'purchase'
-      XML_COLLECTION_NODE = "Purchase"
-      XML_NODE = "Purchase"
+      REST_RESOURCE = 'purchase'.freeze
+      XML_COLLECTION_NODE = 'Purchase'.freeze
+      XML_NODE = 'Purchase'.freeze
 
-      xml_accessor :id, :from => 'Id'
-      xml_accessor :sync_token, :from => 'SyncToken', :as => Integer
-      xml_accessor :meta_data, :from => 'MetaData', :as => MetaData
-      xml_accessor :doc_number, :from => 'DocNumber'
-      xml_accessor :txn_date, :from => 'TxnDate', :as => Date
-      xml_accessor :private_note, :from => 'PrivateNote'
+      xml_accessor :id, from: 'Id'
+      xml_accessor :sync_token, from: 'SyncToken', as: Integer
+      xml_accessor :meta_data, from: 'MetaData', as: MetaData
+      xml_accessor :doc_number, from: 'DocNumber'
+      xml_accessor :txn_date, from: 'TxnDate', as: Date
+      xml_accessor :private_note, from: 'PrivateNote'
 
-      xml_accessor :line_items, :from => 'Line', :as => [PurchaseLineItem]
-      xml_accessor :account_ref, :from => 'AccountRef', :as => BaseReference
-      xml_accessor :txn_tax_detail, :from => 'TxnTaxDetail', :as => TransactionTaxDetail
+      xml_accessor :line_items, from: 'Line', as: [PurchaseLineItem]
+      xml_accessor :account_ref, from: 'AccountRef', as: BaseReference
+      xml_accessor :txn_tax_detail, from: 'TxnTaxDetail', as: TransactionTaxDetail
 
-      xml_accessor :payment_type, :from => 'PaymentType'
-      xml_accessor :entity_ref, :from => 'EntityRef', :as => BaseReference
-      xml_accessor :remit_to_address, :from => 'RemitToAddr', :as => PhysicalAddress
-      xml_accessor :total, :from => 'TotalAmt', :as => BigDecimal, :to_xml => to_xml_big_decimal
-      xml_accessor :print_status, :from => 'PrintStatus'
-      xml_accessor :department_ref, :from => 'DepartmentRef', :as => BaseReference
+      xml_accessor :payment_type, from: 'PaymentType'
+      xml_accessor :entity_ref, from: 'EntityRef', as: BaseReference
+      xml_accessor :remit_to_address, from: 'RemitToAddr', as: PhysicalAddress
+      xml_accessor :total, from: 'TotalAmt', as: BigDecimal, to_xml: to_xml_big_decimal
+      xml_accessor :print_status, from: 'PrintStatus'
+      xml_accessor :department_ref, from: 'DepartmentRef', as: BaseReference
 
-      xml_accessor :currency_ref, :from => 'CurrencyRef', :as => BaseReference
-      xml_accessor :exchange_rate, :from => 'ExchangeRate', :as => BigDecimal, :to_xml => to_xml_big_decimal
-      xml_accessor :linked_transactions, :from => 'LinkedTxn', :as => [LinkedTransaction]
-      xml_accessor :credit?, :from => 'Credit'
+      xml_accessor :currency_ref, from: 'CurrencyRef', as: BaseReference
+      xml_accessor :exchange_rate, from: 'ExchangeRate', as: BigDecimal, to_xml: to_xml_big_decimal
+      xml_accessor :linked_transactions, from: 'LinkedTxn', as: [LinkedTransaction]
+      xml_accessor :credit?, from: 'Credit'
 
       reference_setters
 
@@ -49,9 +49,8 @@ module Quickbooks
       validate :line_item_size
 
       #== This adds aliases for backwards compatability to old attributes names
-      alias_method :total_amount, :total
-      alias_method :total_amount=, :total=
-
+      alias total_amount total
+      alias total_amount= total=
     end
   end
 end

@@ -1,9 +1,8 @@
 module Quickbooks
   module Service
     class PaymentMethod < BaseService
-
       def fetch_by_name(name)
-        self.query(search_name_query(name)).entries.first
+        query(search_name_query(name)).entries.first
       end
 
       def search_name_query(name)
@@ -11,20 +10,23 @@ module Quickbooks
       end
 
       def update(entity, options = {})
-        raise Quickbooks::InvalidModelException.new('Payment Method sparse update is not supported by Intuit at this time') if options[:sparse] && options[:sparse] == true
+        if options[:sparse] && options[:sparse] == true
+          raise Quickbooks::InvalidModelException, 'Payment Method sparse update is not supported by Intuit at this time'
+        end
+
         super(entity, options)
       end
 
       def delete(department)
         department.active = false
-        update(department, :sparse => false)
+        update(department, sparse: false)
       end
 
       private
 
-      def model
-        Quickbooks::Model::PaymentMethod
-      end
+        def model
+          Quickbooks::Model::PaymentMethod
+        end
     end
   end
 end

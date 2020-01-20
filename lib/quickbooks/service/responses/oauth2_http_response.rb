@@ -1,7 +1,6 @@
 module Quickbooks
   module Service
     module Responses
-
       class OAuth2HttpResponse
         include Quickbooks::Service::Responses::Methods
 
@@ -29,15 +28,9 @@ module Quickbooks
         end
 
         def headers
-          if @real_response.respond_to?(:headers)
-            @real_response.headers
-          else
-            nil
-          end
+          @real_response.headers if @real_response.respond_to?(:headers)
         end
-
       end
-
     end
   end
 end

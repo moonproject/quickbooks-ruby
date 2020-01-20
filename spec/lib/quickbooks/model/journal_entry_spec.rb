@@ -1,8 +1,7 @@
 require 'nokogiri'
 
-describe "Quickbooks::Model::JournalEntry" do
-
-  it "validates basic setup" do
+describe 'Quickbooks::Model::JournalEntry' do
+  it 'validates basic setup' do
     je = Quickbooks::Model::JournalEntry.new
     line_item = Quickbooks::Model::Line.new
     line_item.description = 'Received Payment'
@@ -38,9 +37,9 @@ describe "Quickbooks::Model::JournalEntry" do
     expect(n.at('JournalEntryLineDetail > Entity > EntityRef')[:name]).to eq('James Rockenstall')
   end
 
-  it "parse from XML" do
-    xml = fixture("journal_entry.xml")
+  it 'parse from XML' do
+    xml = fixture('journal_entry.xml')
     item = Quickbooks::Model::JournalEntry.from_xml(xml)
-    expect(item.id).to eq("450")
+    expect(item.id).to eq('450')
   end
 end

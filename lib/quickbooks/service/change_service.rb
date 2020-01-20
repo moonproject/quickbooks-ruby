@@ -1,8 +1,7 @@
 module Quickbooks
   module Service
     class ChangeService < BaseService
-
-      def url_for_query(query = nil, start_position = 1, max_results = 20)
+      def url_for_query(query = nil, _start_position = 1, _max_results = 20)
         q = entity
         q = "#{q}&#{query}" if query.present?
 
@@ -15,14 +14,13 @@ module Quickbooks
 
       private
 
-      def entity
-        raise NotImplementedError
-      end
+        def entity
+          raise NotImplementedError
+        end
 
-      def model
-        raise NotImplementedError
-      end
-
+        def model
+          raise NotImplementedError
+        end
     end
   end
 end

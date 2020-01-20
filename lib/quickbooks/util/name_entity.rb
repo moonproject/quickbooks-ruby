@@ -1,5 +1,4 @@
 module NameEntity
-
   module Quality
     def email_address=(email_address)
       self.primary_email_address = Quickbooks::Model::EmailAddress.new(email_address)
@@ -10,21 +9,21 @@ module NameEntity
     end
 
     def names_cannot_contain_invalid_characters
-      [:name, :display_name, :given_name, :middle_name, :family_name, :print_on_check_name].each do |property|
+      %i[name display_name given_name middle_name family_name print_on_check_name].each do |property|
         next unless respond_to? property
+
         value = send(property).to_s
-        if value.index(':')
-          errors.add(property, ":#{property} cannot contain a colon (:).")
-        end
+        errors.add(property, ":#{property} cannot contain a colon (:).") if value.index(':')
       end
     end
 
     def email_address_is_valid
       if primary_email_address
         address = primary_email_address.address.to_s
-        return false if address.length == 0
+        return false if address.empty?
+
         unless address.index('@') && address.index('.')
-          errors.add(:primary_email_address, "Email address must contain @ and . (dot)")
+          errors.add(:primary_email_address, 'Email address must contain @ and . (dot)')
         end
       end
     end
@@ -56,18 +55,15 @@ module NameEntity
     def journal_line_entry_tax
       if tax_code_ref
         # tax_applicable_on must be set
-        errors.add(:tax_applicable_on, "TaxApplicableOn must be set when TaxCodeRef is set") if tax_applicable_on.nil?
-        errors.add(:tax_amount, "TaxAmount must be set when TaxCodeRef is set") if tax_amount.nil?
+        errors.add(:tax_applicable_on, 'TaxApplicableOn must be set when TaxCodeRef is set') if tax_applicable_on.nil?
+        errors.add(:tax_amount, 'TaxAmount must be set when TaxCodeRef is set') if tax_amount.nil?
       end
     end
   end
 
   module PermitAlterations
-
     def valid_for_update?
-      if sync_token.nil?
-        errors.add(:sync_token, "Missing required attribute SyncToken for update")
-      end
+      errors.add(:sync_token, 'Missing required attribute SyncToken for update') if sync_token.nil?
       errors.empty?
     end
 
@@ -78,7 +74,8 @@ module NameEntity
 
     # To delete an account Intuit requires we provide Id and SyncToken fields
     def valid_for_deletion?
-      return false if(id.nil? || sync_token.nil?)
+      return false if id.nil? || sync_token.nil?
+
       id.to_i > 0 && !sync_token.to_s.empty? && sync_token.to_i >= 0
     end
   end

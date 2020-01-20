@@ -1,7 +1,6 @@
 module Quickbooks
   module Service
     class JournalCode < BaseService
-
       def delete(entry)
         delete_by_query_string(entry)
       end
@@ -23,9 +22,9 @@ module Quickbooks
 
       private
 
-      def model
-        Quickbooks::Model::JournalCode
-      end
+        def model
+          Quickbooks::Model::JournalCode
+        end
     end
   end
 end

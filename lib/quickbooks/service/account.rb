@@ -1,7 +1,6 @@
 module Quickbooks
   module Service
     class Account < BaseService
-
       def delete(account)
         account.active = false
         update(account, sparse: true)
@@ -29,9 +28,9 @@ module Quickbooks
 
       private
 
-      def model
-        Quickbooks::Model::Account
-      end
+        def model
+          Quickbooks::Model::Account
+        end
     end
   end
 end

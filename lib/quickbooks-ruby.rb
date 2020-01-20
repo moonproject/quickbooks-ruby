@@ -184,7 +184,7 @@ require 'quickbooks/service/change_data_capture'
 require 'quickbooks/service/refund_receipt_change'
 
 # Register Faraday Middleware
-Faraday::Middleware.register_middleware :gzip => lambda { Gzip }
+Faraday::Middleware.register_middleware gzip: -> { Gzip }
 
 module Quickbooks
   @@sandbox_mode = false
@@ -256,5 +256,4 @@ module Quickbooks
       super(msg)
     end
   end
-
 end

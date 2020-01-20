@@ -1,7 +1,6 @@
 module Quickbooks
   module Model
     module Definition
-
       def self.included(base)
         base.extend(ClassMethods)
       end
@@ -15,6 +14,7 @@ module Quickbooks
           Estimate
           Invoice
           JournalEntry
+          JournalCode
           Payment
           Purchase
           PurchaseOrder
@@ -22,14 +22,14 @@ module Quickbooks
           SalesReceipt
           TimeActivity
           VendorCredit
-        }
+        }.freeze
 
         def is_transaction_entity?
-          TRANSACTION_ENTITIES.include?(self.name.demodulize)
+          TRANSACTION_ENTITIES.include?(name.demodulize)
         end
 
         def is_name_list_entity?
-          !self.is_transaction_entity?
+          !is_transaction_entity?
         end
       end
 
@@ -40,7 +40,6 @@ module Quickbooks
       def is_name_list_entity?
         self.class.is_name_list_entity?
       end
-
     end
   end
 end

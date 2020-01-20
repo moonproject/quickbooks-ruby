@@ -1,22 +1,17 @@
 module Quickbooks
   module Service
     class Upload < BaseService
-
-      XML_NODE = "AttachableResponse"
+      XML_NODE = 'AttachableResponse'.freeze
 
       # path_to_file: String - path to file
       # mime_type: String - the MIME type of the file, e.g. image/jpeg
       # attachable: Quickbooks::Model::Attachable meta-data details, can be null
       def upload(path_to_file, mime_type, attachable = nil)
-        url = url_for_resource("upload")
+        url = url_for_resource('upload')
         uploadIO = class_for_io.new(path_to_file, mime_type)
         response = do_http_file_upload(uploadIO, url, attachable)
-        prefix = "AttachableResponse/xmlns:Attachable"
-        if response.code.to_i == 200
-          model.from_xml(parse_singular_entity_response(model, response.plain_body, prefix))
-        else
-          nil
-        end
+        prefix = 'AttachableResponse/xmlns:Attachable'
+        model.from_xml(parse_singular_entity_response(model, response.plain_body, prefix)) if response.code.to_i == 200
       end
 
       def class_for_io
@@ -30,10 +25,9 @@ module Quickbooks
 
       private
 
-      def model
-        Quickbooks::Model::Attachable
-      end
-
+        def model
+          Quickbooks::Model::Attachable
+        end
     end
   end
 end

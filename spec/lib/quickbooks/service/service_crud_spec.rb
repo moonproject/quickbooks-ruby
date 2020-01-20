@@ -7,7 +7,6 @@ end
 module Quickbooks
   module Service
     describe ServiceCrud do
-
       it 'defaults to 1000 per batch' do
         expect(ServicedClass).to receive(:query).with(nil, page: 1, per_page: 1000).and_return(double(Quickbooks::Collection, count: 1))
         ServicedClass.query_in_batches {}
@@ -38,21 +37,21 @@ module Quickbooks
         expect(yielded.size).to eq 1
       end
 
-      it "finds by attribute" do
+      it 'finds by attribute' do
         results = double(Quickbooks::Collection, count: 1)
         expect(ServicedClass).to receive(:resource_for_singular).and_return ServicedClass
         expect(ServicedClass).to receive(:model).and_return ServicedClass
         expect(ServicedClass).to receive(:query).with("select * from ServicedClass where Name = 'test'", {})
-        ServicedClass.find_by(:name, "test")
+        ServicedClass.find_by(:name, 'test')
       end
 
-      it "checks for existence" do
+      it 'checks for existence' do
         results = double(Quickbooks::Collection, count: 1)
-        expect(ServicedClass).to receive(:find_by).with(:name, "test", {}).and_return(results)
-        expect(ServicedClass.exists?(:name, "test")).to be
+        expect(ServicedClass).to receive(:find_by).with(:name, 'test', {}).and_return(results)
+        expect(ServicedClass.exists?(:name, 'test')).to be
       end
 
-      it "finds all" do
+      it 'finds all' do
         results = double(Quickbooks::Collection, count: 1)
         expect(results).to receive(:entries).and_return []
         expect(ServicedClass).to receive(:query).with(nil, page: 1, per_page: 1000).and_return(results)

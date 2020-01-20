@@ -1,10 +1,9 @@
 module Quickbooks
   module Service
     class Customer < BaseService
-
       def delete(customer)
         customer.active = false
-        update(customer, :sparse => true)
+        update(customer, sparse: true)
       end
 
       def url_for_resource(resource)
@@ -24,10 +23,9 @@ module Quickbooks
 
       private
 
-      def model
-        Quickbooks::Model::Customer
-      end
-
+        def model
+          Quickbooks::Model::Customer
+        end
     end
   end
 end

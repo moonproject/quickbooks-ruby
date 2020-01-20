@@ -10,52 +10,52 @@
 module Quickbooks
   module Model
     class Customer < BaseModel
-      XML_COLLECTION_NODE = "Customer"
-      XML_NODE = "Customer"
-      REST_RESOURCE = 'customer'
+      XML_COLLECTION_NODE = 'Customer'.freeze
+      XML_NODE = 'Customer'.freeze
+      REST_RESOURCE = 'customer'.freeze
       include NameEntity::Quality
       include NameEntity::PermitAlterations
 
       MINORVERSION = 33
 
       xml_name XML_NODE
-      xml_accessor :id, :from => 'Id'
-      xml_accessor :sync_token, :from => 'SyncToken', :as => Integer
-      xml_accessor :meta_data, :from => 'MetaData', :as => MetaData
-      xml_accessor :title, :from => 'Title'
-      xml_accessor :given_name, :from => 'GivenName'
-      xml_accessor :middle_name, :from => 'MiddleName'
-      xml_accessor :family_name, :from => 'FamilyName'
-      xml_accessor :company_name, :from => 'CompanyName'
-      xml_accessor :display_name, :from => 'DisplayName'
-      xml_accessor :print_on_check_name, :from => 'PrintOnCheckName'
-      xml_accessor :active?, :from => 'Active'
-      xml_accessor :primary_phone, :from => 'PrimaryPhone', :as => TelephoneNumber
-      xml_accessor :alternate_phone, :from => 'AlternatePhone', :as => TelephoneNumber
-      xml_accessor :mobile_phone, :from => 'Mobile', :as => TelephoneNumber
-      xml_accessor :fax_phone, :from => 'Fax', :as => TelephoneNumber
-      xml_accessor :primary_email_address, :from => 'PrimaryEmailAddr', :as => EmailAddress
-      xml_accessor :web_site, :from => 'WebAddr', :as => WebSiteAddress
-      xml_accessor :billing_address, :from => 'BillAddr', :as => PhysicalAddress
-      xml_accessor :shipping_address, :from => 'ShipAddr', :as => PhysicalAddress
-      xml_accessor :job, :from => 'Job'
-      xml_accessor :bill_with_parent, :from => 'BillWithParent'
-      xml_accessor :parent_ref, :from => 'ParentRef', :as => BaseReference
-      xml_accessor :level, :from => 'Level'
-      xml_accessor :sales_term_ref, :from => 'SalesTermRef', :as => BaseReference
-      xml_accessor :payment_method_ref, :from => 'PaymentMethodRef', :as => BaseReference
-      xml_accessor :balance, :from => 'Balance', :as => BigDecimal, :to_xml => to_xml_big_decimal
-      xml_accessor :open_balance_date, :from => 'OpenBalanceDate', :as => Date
-      xml_accessor :balance_with_jobs, :from => 'BalanceWithJobs', :as => BigDecimal, :to_xml => to_xml_big_decimal
-      xml_accessor :preferred_delivery_method, :from => 'PreferredDeliveryMethod'
-      xml_accessor :resale_num, :from => 'ResaleNum'
-      xml_accessor :suffix, :from => 'Suffix'
-      xml_accessor :fully_qualified_name, :from => 'FullyQualifiedName'
-      xml_accessor :taxable, :from => 'Taxable'
-      xml_accessor :default_tax_code_ref, :from => 'DefaultTaxCodeRef', :as => BaseReference
-      xml_accessor :notes, :from => 'Notes'
-      xml_accessor :currency_ref, :from => 'CurrencyRef', :as => BaseReference
-      xml_accessor :tax_exemption_reason_id, :from => 'TaxExemptionReasonId'
+      xml_accessor :id, from: 'Id'
+      xml_accessor :sync_token, from: 'SyncToken', as: Integer
+      xml_accessor :meta_data, from: 'MetaData', as: MetaData
+      xml_accessor :title, from: 'Title'
+      xml_accessor :given_name, from: 'GivenName'
+      xml_accessor :middle_name, from: 'MiddleName'
+      xml_accessor :family_name, from: 'FamilyName'
+      xml_accessor :company_name, from: 'CompanyName'
+      xml_accessor :display_name, from: 'DisplayName'
+      xml_accessor :print_on_check_name, from: 'PrintOnCheckName'
+      xml_accessor :active?, from: 'Active'
+      xml_accessor :primary_phone, from: 'PrimaryPhone', as: TelephoneNumber
+      xml_accessor :alternate_phone, from: 'AlternatePhone', as: TelephoneNumber
+      xml_accessor :mobile_phone, from: 'Mobile', as: TelephoneNumber
+      xml_accessor :fax_phone, from: 'Fax', as: TelephoneNumber
+      xml_accessor :primary_email_address, from: 'PrimaryEmailAddr', as: EmailAddress
+      xml_accessor :web_site, from: 'WebAddr', as: WebSiteAddress
+      xml_accessor :billing_address, from: 'BillAddr', as: PhysicalAddress
+      xml_accessor :shipping_address, from: 'ShipAddr', as: PhysicalAddress
+      xml_accessor :job, from: 'Job'
+      xml_accessor :bill_with_parent, from: 'BillWithParent'
+      xml_accessor :parent_ref, from: 'ParentRef', as: BaseReference
+      xml_accessor :level, from: 'Level'
+      xml_accessor :sales_term_ref, from: 'SalesTermRef', as: BaseReference
+      xml_accessor :payment_method_ref, from: 'PaymentMethodRef', as: BaseReference
+      xml_accessor :balance, from: 'Balance', as: BigDecimal, to_xml: to_xml_big_decimal
+      xml_accessor :open_balance_date, from: 'OpenBalanceDate', as: Date
+      xml_accessor :balance_with_jobs, from: 'BalanceWithJobs', as: BigDecimal, to_xml: to_xml_big_decimal
+      xml_accessor :preferred_delivery_method, from: 'PreferredDeliveryMethod'
+      xml_accessor :resale_num, from: 'ResaleNum'
+      xml_accessor :suffix, from: 'Suffix'
+      xml_accessor :fully_qualified_name, from: 'FullyQualifiedName'
+      xml_accessor :taxable, from: 'Taxable'
+      xml_accessor :default_tax_code_ref, from: 'DefaultTaxCodeRef', as: BaseReference
+      xml_accessor :notes, from: 'Notes'
+      xml_accessor :currency_ref, from: 'CurrencyRef', as: BaseReference
+      xml_accessor :tax_exemption_reason_id, from: 'TaxExemptionReasonId'
 
       #== Validations
       validate :names_cannot_contain_invalid_characters

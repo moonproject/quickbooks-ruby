@@ -3,9 +3,9 @@ module Quickbooks
     class TaxService < BaseServiceJSON
       private
 
-      def model
-        Quickbooks::Model::TaxService
-      end
+        def model
+          Quickbooks::Model::TaxService
+        end
     end
   end
 end

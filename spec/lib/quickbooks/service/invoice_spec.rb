@@ -1,13 +1,13 @@
-describe "Quickbooks::Service::Invoice" do
+describe 'Quickbooks::Service::Invoice' do
   before(:all) do
     construct_service :invoice
   end
 
-  it "can query for invoices" do
-    xml = fixture("invoices.xml")
+  it 'can query for invoices' do
+    xml = fixture('invoices.xml')
     model = Quickbooks::Model::Invoice
 
-    stub_http_request(:get, @service.url_for_query, ["200", "OK"], xml)
+    stub_http_request(:get, @service.url_for_query, %w[200 OK], xml)
     invoices = @service.query
     expect(invoices.entries.count).to eq 1
 
@@ -15,72 +15,72 @@ describe "Quickbooks::Service::Invoice" do
     expect(first_invoice.doc_number).to eq '1001'
   end
 
-  it "can fetch an Invoice by ID" do
-    xml = fixture("fetch_invoice_by_id.xml")
+  it 'can fetch an Invoice by ID' do
+    xml = fixture('fetch_invoice_by_id.xml')
     model = Quickbooks::Model::Invoice
-    stub_http_request(:get, %r{#{@service.url_for_resource(model::REST_RESOURCE)}/1}, ["200", "OK"], xml)
+    stub_http_request(:get, %r{#{@service.url_for_resource(model::REST_RESOURCE)}/1}, %w[200 OK], xml)
     invoice = @service.fetch_by_id(1)
-    expect(invoice.doc_number).to eq "1001"
+    expect(invoice.doc_number).to eq '1001'
   end
 
-  it "cannot create an Invoice without any line items" do
+  it 'cannot create an Invoice without any line items' do
     invoice = Quickbooks::Model::Invoice.new
 
-    expect {
+    expect do
       @service.create(invoice)
-    }.to raise_error(Quickbooks::InvalidModelException, /At least 1 line item is required/)
+    end.to raise_error(Quickbooks::InvalidModelException, /At least 1 line item is required/)
 
     expect(invoice.valid?).to eq false
-    expect(invoice.errors.keys.include?(:line_items)).to be true
+    expect(invoice.errors.key?(:line_items)).to be true
   end
 
-  it "is valid when it has 1 or more line items" do
+  it 'is valid when it has 1 or more line items' do
     invoice = Quickbooks::Model::Invoice.new
     invoice.line_items << Quickbooks::Model::InvoiceLineItem.new
 
-    expect {
+    expect do
       @service.create(invoice)
-    }.to raise_error(Quickbooks::InvalidModelException)
+    end.to raise_error(Quickbooks::InvalidModelException)
 
     expect(invoice.valid?).to eq false
-    expect(invoice.errors.keys.include?(:line_items)).to_not be true
+    expect(invoice.errors.key?(:line_items)).to_not be true
   end
 
-  it "cannot create an Invoice without a CustomerRef" do
+  it 'cannot create an Invoice without a CustomerRef' do
     invoice = Quickbooks::Model::Invoice.new
 
-    expect {
+    expect do
       @service.create(invoice)
-    }.to raise_error(Quickbooks::InvalidModelException)
+    end.to raise_error(Quickbooks::InvalidModelException)
 
     expect(invoice.valid?).to eq false
-    expect(invoice.errors.keys.include?(:customer_ref)).to be true
+    expect(invoice.errors.key?(:customer_ref)).to be true
   end
 
-  it "is valid when a CustomerRef is specified" do
+  it 'is valid when a CustomerRef is specified' do
     invoice = Quickbooks::Model::Invoice.new
     invoice.customer_id = 2
 
-    expect {
+    expect do
       @service.create(invoice)
-    }.to raise_error(Quickbooks::InvalidModelException)
+    end.to raise_error(Quickbooks::InvalidModelException)
 
     expect(invoice.valid?).to eq false
-    expect(invoice.errors.keys.include?(:customer_ref)).to_not be true
+    expect(invoice.errors.key?(:customer_ref)).to_not be true
   end
 
-  it "can create an Invoice" do
-    xml = fixture("fetch_invoice_by_id.xml")
+  it 'can create an Invoice' do
+    xml = fixture('fetch_invoice_by_id.xml')
     model = Quickbooks::Model::Invoice
 
-    stub_http_request(:post, @service.url_for_resource(model::REST_RESOURCE), ["200", "OK"], xml)
+    stub_http_request(:post, @service.url_for_resource(model::REST_RESOURCE), %w[200 OK], xml)
 
     invoice = Quickbooks::Model::Invoice.new
     invoice.customer_id = 2
 
     line_item = Quickbooks::Model::InvoiceLineItem.new
     line_item.amount = 50
-    line_item.description = "Plush Baby Doll"
+    line_item.description = 'Plush Baby Doll'
     line_item.sales_item! do |detail|
       detail.unit_price = 50
       detail.quantity = 1
@@ -91,19 +91,19 @@ describe "Quickbooks::Service::Invoice" do
     invoice.line_items << line_item
 
     created_invoice = @service.create(invoice)
-    expect(created_invoice.id).to eq "1"
+    expect(created_invoice.id).to eq '1'
   end
 
-  it "can sparse update an Invoice" do
+  it 'can sparse update an Invoice' do
     model = Quickbooks::Model::Invoice
 
     invoice = Quickbooks::Model::Invoice.new
-    invoice.doc_number = "ABC-123"
+    invoice.doc_number = 'ABC-123'
     invoice.customer_id = 2
 
     line_item = Quickbooks::Model::InvoiceLineItem.new
     line_item.amount = 50
-    line_item.description = "Plush Baby Doll"
+    line_item.description = 'Plush Baby Doll'
     line_item.sales_item! do |detail|
       detail.unit_price = 50
       detail.quantity = 1
@@ -113,53 +113,53 @@ describe "Quickbooks::Service::Invoice" do
 
     invoice.line_items << line_item
 
-    xml = fixture("fetch_invoice_by_id.xml")
-    stub_http_request(:post, @service.url_for_resource(model::REST_RESOURCE), ["200", "OK"], xml)
+    xml = fixture('fetch_invoice_by_id.xml')
+    stub_http_request(:post, @service.url_for_resource(model::REST_RESOURCE), %w[200 OK], xml)
 
-    update_response = @service.update(invoice, :sparse => true)
+    update_response = @service.update(invoice, sparse: true)
     expect(update_response.doc_number).to eq '1001'
   end
 
-  it "can delete an Invoice" do
+  it 'can delete an Invoice' do
     model = Quickbooks::Model::Invoice
     invoice = Quickbooks::Model::Invoice.new
-    invoice.doc_number = "1001"
+    invoice.doc_number = '1001'
     invoice.sync_token = 2
     invoice.id = 1
 
-    xml = fixture("invoice_delete_success_response.xml")
-    stub_http_request(:post, "#{@service.url_for_resource(model::REST_RESOURCE)}?operation=delete", ["200", "OK"], xml)
+    xml = fixture('invoice_delete_success_response.xml')
+    stub_http_request(:post, "#{@service.url_for_resource(model::REST_RESOURCE)}?operation=delete", %w[200 OK], xml)
 
     response = @service.delete(invoice)
     expect(response).to be true
   end
 
-  it "can void an Invoice" do
+  it 'can void an Invoice' do
     model = Quickbooks::Model::Invoice
     invoice = Quickbooks::Model::Invoice.new
     invoice.sync_token = 2
     invoice.id = 1
 
-    xml = fixture("invoice_void_success_response.xml")
-    stub_http_request(:post, "#{@service.url_for_resource(model::REST_RESOURCE)}?operation=void", ["200", "OK"], xml)
+    xml = fixture('invoice_void_success_response.xml')
+    stub_http_request(:post, "#{@service.url_for_resource(model::REST_RESOURCE)}?operation=void", %w[200 OK], xml)
 
     response = @service.void(invoice)
     expect(response.private_note).to eq 'Voided'
   end
 
-  it "can generate an invoice with a discount line item" do
+  it 'can generate an invoice with a discount line item' do
     model = Quickbooks::Model::Invoice
     invoice = Quickbooks::Model::Invoice.new
 
-    xml = fixture("invoice_with_discount_line_item_response.xml")
-    stub_http_request(:post, @service.url_for_resource(model::REST_RESOURCE), ["200", "OK"], xml)
+    xml = fixture('invoice_with_discount_line_item_response.xml')
+    stub_http_request(:post, @service.url_for_resource(model::REST_RESOURCE), %w[200 OK], xml)
 
     invoice.customer_id = 3
     invoice.txn_date = Date.civil(2014, 3, 12)
-    invoice.doc_number = "1001"
+    invoice.doc_number = '1001'
     sales_line_item = Quickbooks::Model::InvoiceLineItem.new
     sales_line_item.amount = 50
-    sales_line_item.description = "Plush Baby Doll"
+    sales_line_item.description = 'Plush Baby Doll'
     sales_line_item.sales_item! do |detail|
       detail.unit_price = 50
       detail.quantity = 1
@@ -178,52 +178,52 @@ describe "Quickbooks::Service::Invoice" do
     invoice.line_items << discount_line_item
 
     created_invoice = @service.create(invoice)
-    expect(created_invoice.id).to eq "4"
+    expect(created_invoice.id).to eq '4'
   end
 
-  it "can send an invoice using bill_email" do
-    xml = fixture("invoice_send.xml")
+  it 'can send an invoice using bill_email' do
+    xml = fixture('invoice_send.xml')
     model = Quickbooks::Model::Invoice
-    stub_http_request(:post, "#{@service.url_for_resource(model::REST_RESOURCE)}/1/send", ["200", "OK"], xml)
+    stub_http_request(:post, "#{@service.url_for_resource(model::REST_RESOURCE)}/1/send", %w[200 OK], xml)
 
     invoice = Quickbooks::Model::Invoice.new
-    invoice.doc_number = "1001"
+    invoice.doc_number = '1001'
     invoice.sync_token = 2
     invoice.id = 1
     sent_invoice = @service.send(invoice)
-    expect(sent_invoice.email_status).to eq "EmailSent"
-    expect(sent_invoice.delivery_info.delivery_type).to eq "Email"
-    expect(sent_invoice.delivery_info.delivery_time).to eq(Time.new(2015, 2, 24, 18, 26, 03, "-08:00"))
+    expect(sent_invoice.email_status).to eq 'EmailSent'
+    expect(sent_invoice.delivery_info.delivery_type).to eq 'Email'
+    expect(sent_invoice.delivery_info.delivery_time).to eq(Time.new(2015, 2, 24, 18, 26, 0o3, '-08:00'))
   end
 
-  it "can send an invoice with new email_address" do
-    xml = fixture("invoice_send.xml")
+  it 'can send an invoice with new email_address' do
+    xml = fixture('invoice_send.xml')
     model = Quickbooks::Model::Invoice
-    stub_http_request(:post, "#{@service.url_for_resource(model::REST_RESOURCE)}/1/send?sendTo=test@intuit.com", ["200", "OK"], xml)
+    stub_http_request(:post, "#{@service.url_for_resource(model::REST_RESOURCE)}/1/send?sendTo=test@intuit.com", %w[200 OK], xml)
 
     invoice = Quickbooks::Model::Invoice.new
-    invoice.doc_number = "1001"
+    invoice.doc_number = '1001'
     invoice.sync_token = 2
     invoice.id = 1
-    sent_invoice = @service.send(invoice, "test@intuit.com")
-    expect(sent_invoice.bill_email.address).to eq "test@intuit.com"
+    sent_invoice = @service.send(invoice, 'test@intuit.com')
+    expect(sent_invoice.bill_email.address).to eq 'test@intuit.com'
   end
 
-  it "allows user to specify a RequestId in a create call" do
-    requestid = "foobar123"
+  it 'allows user to specify a RequestId in a create call' do
+    requestid = 'foobar123'
     model = Quickbooks::Model::Invoice
     invoice = Quickbooks::Model::Invoice.new
 
-    xml = fixture("invoice_with_discount_line_item_response.xml")
+    xml = fixture('invoice_with_discount_line_item_response.xml')
     url = "#{@service.url_for_resource(model::REST_RESOURCE)}?requestid=#{requestid}"
-    stub_http_request(:post, url, ["200", "OK"], xml)
+    stub_http_request(:post, url, %w[200 OK], xml)
 
     invoice.customer_id = 3
     invoice.txn_date = Date.civil(2014, 3, 12)
-    invoice.doc_number = "1001"
+    invoice.doc_number = '1001'
     sales_line_item = Quickbooks::Model::InvoiceLineItem.new
     sales_line_item.amount = 50
-    sales_line_item.description = "Plush Baby Doll"
+    sales_line_item.description = 'Plush Baby Doll'
     sales_line_item.sales_item! do |detail|
       detail.unit_price = 50
       detail.quantity = 1
@@ -241,20 +241,20 @@ describe "Quickbooks::Service::Invoice" do
     invoice.line_items << sales_line_item
     invoice.line_items << discount_line_item
 
-    created_invoice = @service.create(invoice, :query => {:requestid => requestid})
-    expect(created_invoice.id).to eq "4"
+    created_invoice = @service.create(invoice, query: { requestid: requestid })
+    expect(created_invoice.id).to eq '4'
   end
 
-  it "can read line items from a bundle" do
-    xml = fixture("invoice_with_bundle_line_item.xml")
-    stub_http_request(:get, %r{#{@service.url_for_resource(Quickbooks::Model::Invoice::REST_RESOURCE)}/186}, ["200", "OK"], xml)
+  it 'can read line items from a bundle' do
+    xml = fixture('invoice_with_bundle_line_item.xml')
+    stub_http_request(:get, %r{#{@service.url_for_resource(Quickbooks::Model::Invoice::REST_RESOURCE)}/186}, %w[200 OK], xml)
     invoice = @service.fetch_by_id(186)
     expect(invoice.valid?).to be true
 
-    expect(invoice.doc_number).to eq "1020"
+    expect(invoice.doc_number).to eq '1020'
 
     expect(invoice.line_items.size).to eq 3
-    bundles = invoice.line_items.select { |line| line.group_line_detail? }
+    bundles = invoice.line_items.select(&:group_line_detail?)
     expect(bundles).to_not be nil
     bundle = bundles.first
 
@@ -270,7 +270,7 @@ describe "Quickbooks::Service::Invoice" do
     expect(bundle_line.sales_item?).to be true
     expect(bundle_line.id).to eq '2'
     expect(bundle_line.amount).to eq 7.96
-    expect(bundle_line.sales_line_item_detail.item_ref["name"]).to eq "Chocolate Covered Strawberries"
+    expect(bundle_line.sales_line_item_detail.item_ref['name']).to eq 'Chocolate Covered Strawberries'
     expect(bundle_line.sales_line_item_detail.quantity).to eq 15
     expect(bundle_line.sales_line_item_detail.unit_price).to eq 0.5306667
     expect(bundle_line.sales_line_item_detail.tax_code_ref.value).to eq '5'
@@ -279,7 +279,7 @@ describe "Quickbooks::Service::Invoice" do
     expect(bundle_line.sales_item?).to be true
     expect(bundle_line.id).to eq '3'
     expect(bundle_line.amount).to eq 2.65
-    expect(bundle_line.sales_line_item_detail.item_ref["name"]).to eq "Snow Cookie"
+    expect(bundle_line.sales_line_item_detail.item_ref['name']).to eq 'Snow Cookie'
     expect(bundle_line.sales_line_item_detail.quantity).to eq 24
     expect(bundle_line.sales_line_item_detail.unit_price).to eq 0.1104167
     expect(bundle_line.sales_line_item_detail.tax_code_ref.value).to eq '5'
@@ -288,25 +288,23 @@ describe "Quickbooks::Service::Invoice" do
     expect(bundle_total.round(2)).to eq 10.61
   end
 
-  it "can sparse update an Invoice containing a bundle" do
-    xml = fixture("invoice_with_bundle_line_item.xml")
-    stub_http_request(:get, %r{#{@service.url_for_resource(Quickbooks::Model::Invoice::REST_RESOURCE)}/186}, ["200", "OK"], xml)
+  it 'can sparse update an Invoice containing a bundle' do
+    xml = fixture('invoice_with_bundle_line_item.xml')
+    stub_http_request(:get, %r{#{@service.url_for_resource(Quickbooks::Model::Invoice::REST_RESOURCE)}/186}, %w[200 OK], xml)
     invoice = @service.fetch_by_id(186)
 
     invoice.line_items.each do |l|
-      if l.group_line_detail?
-        l.description << " - updated"
-        expect(l.description).to eq 'chocolate covered cookies and other sweets - updated'
-        l.group_line_detail.line_items.each do |group_line_item|
-          if group_line_item.sales_item?
-            group_line_item.description << " - updated"
-          end
-        end
+      next unless l.group_line_detail?
+
+      l.description << ' - updated'
+      expect(l.description).to eq 'chocolate covered cookies and other sweets - updated'
+      l.group_line_detail.line_items.each do |group_line_item|
+        group_line_item.description << ' - updated' if group_line_item.sales_item?
       end
     end
 
-    stub_http_request(:post, @service.url_for_resource(Quickbooks::Model::Invoice::REST_RESOURCE), ["200", "OK"], xml)
-    update_response = @service.update(invoice, :sparse => true)
+    stub_http_request(:post, @service.url_for_resource(Quickbooks::Model::Invoice::REST_RESOURCE), %w[200 OK], xml)
+    update_response = @service.update(invoice, sparse: true)
     expect(update_response.doc_number).to eq '1020'
   end
 end

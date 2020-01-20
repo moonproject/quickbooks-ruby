@@ -12,7 +12,7 @@ module Quickbooks
     attr_accessor :start_position, :max_results, :total_count
 
     def each(*args, &block)
-      (entries|| []).each *args, &block
+      (entries || []).each *args, &block
     end
   end
 end

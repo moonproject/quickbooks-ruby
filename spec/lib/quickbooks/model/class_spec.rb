@@ -1,7 +1,6 @@
-describe "Quickbooks::Model::Class" do
-
-  it "parse from XML" do
-    xml = fixture("class.xml")
+describe 'Quickbooks::Model::Class' do
+  it 'parse from XML' do
+    xml = fixture('class.xml')
     classs = Quickbooks::Model::Class.from_xml(xml)
     expect(classs.sync_token).to eq 1
     expect(classs.name).to eq 'Design'
@@ -12,16 +11,15 @@ describe "Quickbooks::Model::Class" do
 
   it "can't assign a bad name" do
     classs = Quickbooks::Model::Class.new
-    classs.name = "My:Class"
+    classs.name = 'My:Class'
     expect(classs.valid?).to eq false
     expect(classs.errors.keys).to include(:name)
   end
 
-  it "cannot update an invalid model" do
+  it 'cannot update an invalid model' do
     classs = Quickbooks::Model::Class.new
     expect(classs.valid_for_update?).to eq false
     expect(classs.to_xml_ns).to match('Class')
     expect(classs.errors.keys).to include(:sync_token)
   end
-
 end

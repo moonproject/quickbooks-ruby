@@ -1,9 +1,7 @@
 module Quickbooks
   module Service
     module Responses
-
       class OAuth1HttpResponse < OAuthHttpResponse
-
         attr_accessor :real_response
 
         # net/http response
@@ -20,23 +18,13 @@ module Quickbooks
         end
 
         def plain_body
-          if @real_response.respond_to?(:plain_body)
-            @real_response.plain_body
-          else
-            nil
-          end
+          @real_response.plain_body if @real_response.respond_to?(:plain_body)
         end
 
         def headers
-          if @real_response.respond_to?(:headers)
-            @real_response.headers
-          else
-            nil
-          end
+          @real_response.headers if @real_response.respond_to?(:headers)
         end
-
       end
-
     end
   end
 end
